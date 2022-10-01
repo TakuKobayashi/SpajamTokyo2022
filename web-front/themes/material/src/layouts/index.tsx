@@ -26,9 +26,7 @@ const MainLayout = ({ children }: MainLayoutProps): JSX.Element => (
         gap: { zero: 8, sm: 10 },
       }}
     >
-      <Navigation />
       {children}
-      <Footer />
     </Box>
   </ThemeProvider>
 );
