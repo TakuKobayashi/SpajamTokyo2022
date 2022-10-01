@@ -1,6 +1,7 @@
 import awsLambdaFastify from '@fastify/aws-lambda';
 import fastify from 'fastify';
 //import crypto from "crypto";
+import cors from '@fastify/cors'
 import { setupFireStore } from './common/firestore';
 const firestore = setupFireStore();
 
@@ -9,6 +10,7 @@ const firestore = setupFireStore();
 const voteName = 'typhoon';
 
 const app = fastify();
+app.register(cors);
 
 app.get('/', async (request, reply) => {
   return {hello: "world"};
