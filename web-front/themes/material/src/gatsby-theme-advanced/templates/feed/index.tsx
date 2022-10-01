@@ -47,6 +47,7 @@ const Feed = ({ pageContext }: FeedTemplateProps): JSX.Element => {
     <Layout>
       {getTitleOverride()}
       <ListingPageWrapper ref={feedElementRef}>
+        <iframe width="560" height="315" src="https://www.youtube.com/embed/SFUPlb01ick" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
         <Box
           sx={{
             width: "100%",
