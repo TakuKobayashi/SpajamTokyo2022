@@ -10,7 +10,11 @@ const firestore = setupFireStore();
 const voteName = 'typhoon';
 
 const app = fastify();
-app.register(cors);
+app.register(cors, {
+  origin: (origin, cb) => {
+    cb(null, true)
+  }
+});
 
 app.get('/', async (request, reply) => {
   return {hello: "world"};
