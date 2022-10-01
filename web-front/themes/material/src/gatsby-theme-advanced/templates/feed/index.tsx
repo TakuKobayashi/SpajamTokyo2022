@@ -13,6 +13,9 @@ import {
 import Layout from "../../../layouts";
 import FeedListing from "../../../components/FeedListing";
 import ListingPageWrapper from "../../../components/shared/ListingPageWrapper";
+import axios from 'axios';
+
+type VoteTypes = "left" | "right"
 
 const Feed = ({ pageContext }: FeedTemplateProps): JSX.Element => {
   const { feedListing, feedElementRef } = useInfiniteFeed(pageContext);
@@ -43,6 +46,17 @@ const Feed = ({ pageContext }: FeedTemplateProps): JSX.Element => {
     return null;
   };
 
+  const onVoteRequest = async (voteType: VoteTypes) => {
+    const rootUrl = "http://localhost:3000/dev"
+    const formParams = new URLSearchParams();
+    formParams.append('vote_type', voteType.toString());
+    console.log("click:" + voteType)
+    const res = await axios.post(rootUrl + "/vote", {vote_type: voteType})
+    console.log(res.status)
+    console.log(res.data)
+  }
+
+  // TODO iframeのYoutube liveの部分は明日
   return (
     <Layout>
       {getTitleOverride()}
@@ -55,8 +69,8 @@ const Feed = ({ pageContext }: FeedTemplateProps): JSX.Element => {
             gap: { zero: 8, lg: 10 },
             gridTemplateColumns: { zero: "1fr", lg: "1fr 1fr" },
           }}>
-          <Button variant="contained" color="primary">左に投票する</Button>
-          <Button variant="contained" color="warning">右に投票する</Button>
+          <Button variant="contained" color="primary" onClick={() => onVoteRequest("left")}>左に投票する</Button>
+          <Button variant="contained" color="warning" onClick={() => onVoteRequest("right")}>右に投票する</Button>
         </Box>
       </ListingPageWrapper>
     </Layout>
