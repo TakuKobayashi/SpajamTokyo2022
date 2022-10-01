@@ -4,7 +4,7 @@ import { config } from 'dotenv';
 const configedEnv = config();
 
 const serverlessConfiguration: AWS = {
-  service: 'spajam-tokyo-2022-serverless"',
+  service: 'spajam-tokyo-2022',
   frameworkVersion: '3',
   plugins: ['serverless-esbuild', 'serverless-offline', 'serverless-dotenv-plugin'],
   provider: {
