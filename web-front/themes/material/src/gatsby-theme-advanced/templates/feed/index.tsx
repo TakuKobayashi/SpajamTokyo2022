@@ -1,8 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import { Helmet } from "react-helmet";
 
 import { visuallyHidden } from "@mui/utils";
-import YouTube from 'react-youtube';
+import YouTube from "react-youtube";
 import { Typography, Button, Box } from "@mui/material";
 
 import {
@@ -17,9 +17,17 @@ import ListingPageWrapper from "../../../components/shared/ListingPageWrapper";
 import axios from "axios";
 
 type VoteTypes = "left" | "right";
+interface VoteResult {
+  left: number;
+  right: number;
+}
 
 const Feed = ({ pageContext }: FeedTemplateProps): JSX.Element => {
   const { feedListing, feedElementRef } = useInfiniteFeed(pageContext);
+  const [voteResult, setVoteResult] = useState<VoteResult>({
+    left: 0,
+    right: 0,
+  });
 
   const config = useConfig();
 
@@ -50,13 +58,14 @@ const Feed = ({ pageContext }: FeedTemplateProps): JSX.Element => {
   const onVoteRequest = async (voteType: VoteTypes) => {
     //    const rootUrl = "http://localhost:3000/dev"
     const rootUrl =
-      "https://vermorhp1e.execute-api.ap-northeast-1.amazonaws.com/production/";
+      "https://vermorhp1e.execute-api.ap-northeast-1.amazonaws.com/production";
     const formParams = new URLSearchParams();
     formParams.append("vote_type", voteType.toString());
     console.log("click:" + voteType);
-    const res = await axios.post(rootUrl + "/vote", { vote_type: voteType });
-    console.log(res.status);
-    console.log(res.data);
+    const res = await axios.post<VoteResult>(rootUrl + "/vote", {
+      vote_type: voteType,
+    });
+    setVoteResult(res.data);
   };
 
   // TODO iframeのYoutube liveの部分は明日
@@ -87,6 +96,17 @@ const Feed = ({ pageContext }: FeedTemplateProps): JSX.Element => {
           >
             右に投票する
           </Button>
+        </Box>
+        <Box
+          sx={{
+            width: "100%",
+            display: "grid",
+            gap: { zero: 8, lg: 10 },
+            gridTemplateColumns: { zero: "1fr", lg: "1fr 1fr" },
+          }}
+        >
+          {voteResult.left}
+          {voteResult.right}
         </Box>
       </ListingPageWrapper>
     </Layout>
