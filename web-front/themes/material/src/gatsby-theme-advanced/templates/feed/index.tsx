@@ -2,7 +2,7 @@ import React from "react";
 import { Helmet } from "react-helmet";
 
 import { visuallyHidden } from "@mui/utils";
-import { Typography } from "@mui/material";
+import { Typography, Button, Box } from "@mui/material";
 
 import {
   useConfig,
@@ -47,10 +47,16 @@ const Feed = ({ pageContext }: FeedTemplateProps): JSX.Element => {
     <Layout>
       {getTitleOverride()}
       <ListingPageWrapper ref={feedElementRef}>
-        <Typography sx={visuallyHidden} variant="h1">
-          Recent Posts
-        </Typography>
-        <FeedListing listing={feedListing} noHero={noHero} />
+        <Box
+          sx={{
+            width: "100%",
+            display: "grid",
+            gap: { zero: 8, lg: 10 },
+            gridTemplateColumns: { zero: "1fr", lg: "1fr 1fr" },
+          }}>
+          <Button variant="contained" color="primary">左に投票する</Button>
+          <Button variant="contained" color="warning">右に投票する</Button>
+        </Box>
       </ListingPageWrapper>
     </Layout>
   );

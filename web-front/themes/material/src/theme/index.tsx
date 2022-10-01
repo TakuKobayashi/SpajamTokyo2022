@@ -22,7 +22,7 @@ declare module "@mui/material/styles" {
 export const themeOptions: ThemeOptions = {
   palette: {
     primary: {
-      main: "#c23248",
+      main: "#1976d2",
     },
     secondary: {
       main: "#fafafa",
