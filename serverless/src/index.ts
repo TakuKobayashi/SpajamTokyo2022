@@ -32,7 +32,18 @@ app.post('/vote', async (request, reply) => {
 });
 
 app.get('/poling/vote', async (request, reply) => {
-  return { left: 1, right: 1 };
+  return loadCurrentData();
 });
+
+async function loadCurrentData(): Promise<any> {
+  const currentDoc = firestore.collection('votes').doc(voteName);
+  const currentDataDoc = await currentDoc.get();
+  const currentData = currentDataDoc.data() || {};
+  const leftCount = currentData.left || 0;
+  currentData.left = leftCount;
+  const rightCount = currentData.right || 0;
+  currentData.right = rightCount;
+  return currentData;
+}
 
 export const handler = awsLambdaFastify(app);
