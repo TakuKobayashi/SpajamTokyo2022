@@ -6,25 +6,28 @@ const firestore = setupFireStore();
 
 // ランダムなIDを生成する場合はこちら
 //const voteId = crypto.randomBytes(8).toString("hex");
-const voteName = 'typhoon'
+const voteName = 'typhoon';
 
 const app = fastify();
 
 app.get('/', async (request, reply) => {
-  const currentDoc = firestore.collection("votes").doc(voteName);
-  const currentDataDoc = await currentDoc.get();
-  const currentData = currentDataDoc.data() || {};
-  const leftCount = currentData.left || 0
-  await currentDoc.set({left: leftCount + 1});
-  return currentData;
+  return {hello: "world"};
 });
 
 app.post('/vote', async (request, reply) => {
-  const currentDoc = firestore.collection("votes").doc(voteName);
+  // parsed JSON
+  const requestBody = request.body;
+  const currentDoc = firestore.collection('votes').doc(voteName);
   const currentDataDoc = await currentDoc.get();
   const currentData = currentDataDoc.data() || {};
-  const leftCount = currentData.left || 0
-  await currentDoc.set({left: leftCount + 1});
+  if (requestBody.vote_type === 'left') {
+    const leftCount = currentData.left || 0;
+    currentData.left = leftCount + 1;
+  } else if (requestBody.vote_type === 'right') {
+    const rightCount = currentData.right || 0;
+    currentData.right = rightCount + 1;
+  }
+  await currentDoc.set(currentData);
   return currentData;
 });
 
