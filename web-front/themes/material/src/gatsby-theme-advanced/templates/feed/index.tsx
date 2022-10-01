@@ -2,6 +2,7 @@ import React from "react";
 import { Helmet } from "react-helmet";
 
 import { visuallyHidden } from "@mui/utils";
+import YouTube from 'react-youtube';
 import { Typography, Button, Box } from "@mui/material";
 
 import {
@@ -63,15 +64,7 @@ const Feed = ({ pageContext }: FeedTemplateProps): JSX.Element => {
     <Layout>
       {getTitleOverride()}
       <ListingPageWrapper ref={feedElementRef}>
-        <iframe
-          width="560"
-          height="315"
-          src="https://www.youtube.com/embed/SFUPlb01ick"
-          title="YouTube video player"
-          frameborder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowfullscreen
-        ></iframe>
+        <YouTube videoId="SFUPlb01ick" />
         <Box
           sx={{
             width: "100%",
