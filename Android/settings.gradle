@@ -1,0 +1,2 @@
+rootProject.name = "SpajamTokyo2022"
+include ':app'
