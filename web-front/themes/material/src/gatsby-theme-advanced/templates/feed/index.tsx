@@ -74,12 +74,15 @@ const Feed = ({ pageContext }: FeedTemplateProps): JSX.Element => {
       {getTitleOverride()}
       <ListingPageWrapper ref={feedElementRef}>
         <YouTube videoId="5EQVoIUQlHw" />
+        <iframe id="inlineMapbox"
+          title="Inline Mapbox"
+          width="60%"
+          height="480"
+          src="https://elix.jp/test/mapbox/typhoon/?caption=no&drag=no&interval=2">
+        </iframe>
         <Box
           sx={{
             width: "100%",
-            display: "grid",
-            gap: { zero: 8, lg: 10 },
-            gridTemplateColumns: { zero: "1fr", lg: "1fr 1fr" },
           }}
         >
           <Button
