@@ -37,6 +37,13 @@ app.post('/vote', async (request, reply) => {
   return currentData;
 });
 
+app.post('/vote/reset', async (request, reply) => {
+  const currentDoc = firestore.collection('votes').doc(voteName);
+  const initData = {left: 0, right: 0}
+  await currentDoc.set(initData);
+  return initData;
+});
+
 app.get('/poling/vote', async (request, reply) => {
   return loadCurrentData();
 });
