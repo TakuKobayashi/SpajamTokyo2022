@@ -118,15 +118,21 @@ const Feed = ({ pageContext }: FeedTemplateProps): JSX.Element => {
         </Box>
         <Box textAlign="center">
           <Grid container spacing={10}>
-            <Grid item spacing={{ xs: 6 }}>
+            <Grid item spacing={{ xs: 3 }}>
+              <Typography variant="h5">左の投票数</Typography>
+            </Grid>
+            <Grid item spacing={{ xs: 3 }}>
               <Typography variant="h5">{voteResult.left}</Typography>
             </Grid>
-            <Grid item spacing={{ xs: 6 }}>
+            <Grid item spacing={{ xs: 3 }}>
               <Typography variant="h5">{voteResult.right}</Typography>
+            </Grid>
+            <Grid item spacing={{ xs: 3 }}>
+              <Typography variant="h5">右の投票数</Typography>
             </Grid>
           </Grid>
         </Box>
-        <Typography variant="h3">台風の進み状況</Typography>
+        <Typography variant="h3">台風の進み状況の様子(Live配信中!!)</Typography>
         <YouTube videoId="5EQVoIUQlHw" />
       </ListingPageWrapper>
     </Layout>
