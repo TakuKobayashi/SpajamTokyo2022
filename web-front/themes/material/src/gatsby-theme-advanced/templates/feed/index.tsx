@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Helmet } from "react-helmet";
 
 import { visuallyHidden } from "@mui/utils";
@@ -29,6 +29,22 @@ const Feed = ({ pageContext }: FeedTemplateProps): JSX.Element => {
     left: 0,
     right: 0,
   });
+  //    const rootUrl = "http://localhost:3000/dev"
+  const rootUrl =
+    "https://vermorhp1e.execute-api.ap-northeast-1.amazonaws.com/production";
+
+  const loadPolingData = async () => {
+    const res = await axios.get<VoteResult>(rootUrl + "/poling/vote");
+    setVoteResult(res.data);
+  };
+
+  useEffect(() => {
+    loadPolingData();
+    const interval = setInterval(async () => {
+      loadPolingData();
+    }, 5000);
+    return () => clearInterval(interval);
+  }, []);
 
   const config = useConfig();
 
@@ -57,9 +73,6 @@ const Feed = ({ pageContext }: FeedTemplateProps): JSX.Element => {
   };
 
   const onVoteRequest = async (voteType: VoteTypes) => {
-    //    const rootUrl = "http://localhost:3000/dev"
-    const rootUrl =
-      "https://vermorhp1e.execute-api.ap-northeast-1.amazonaws.com/production";
     const formParams = new URLSearchParams();
     formParams.append("vote_type", voteType.toString());
     console.log("click:" + voteType);
