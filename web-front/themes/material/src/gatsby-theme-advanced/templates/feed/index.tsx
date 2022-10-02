@@ -73,7 +73,7 @@ const Feed = ({ pageContext }: FeedTemplateProps): JSX.Element => {
     <Layout>
       {getTitleOverride()}
       <ListingPageWrapper ref={feedElementRef}>
-        <YouTube videoId="SFUPlb01ick" />
+        <YouTube videoId="5EQVoIUQlHw" />
         <Box
           sx={{
             width: "100%",
