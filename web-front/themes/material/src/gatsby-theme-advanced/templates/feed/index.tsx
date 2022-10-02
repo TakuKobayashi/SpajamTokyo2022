@@ -133,7 +133,7 @@ const Feed = ({ pageContext }: FeedTemplateProps): JSX.Element => {
           </Grid>
         </Box>
         <Typography variant="h3">台風の進み状況の様子(Live配信中!!)</Typography>
-        <YouTube videoId="5EQVoIUQlHw" />
+        <YouTube videoId="XMyMZIsfKAU" />
       </ListingPageWrapper>
     </Layout>
   );
