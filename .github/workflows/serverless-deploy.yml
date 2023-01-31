@@ -21,8 +21,10 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - name: Register firebaseConfig.json
       working-directory: ./serverless
+      env:
+        FIREBASE_CONFIG: ${{ secrets.FIREBASE_CONFIG }}
       run: |
-        echo "${{ secrets.FIREBASE_CONFIG }}" >> ./firebaseConfig.json
+        echo "${FIREBASE_CONFIG}" >> ./firebaseConfig.json
     - name: Register .env
       working-directory: ./serverless
       run: touch .env
@@ -31,7 +33,10 @@ jobs:
       run: yarn install
     - name: serverless package and deploy
       working-directory: ./serverless
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       run: |
         yarn run serverless package --stage production --package ./build
-        yarn run serverless config credentials --provider aws --key ${{ secrets.AWS_ACCESS_KEY_ID }} --secret ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        yarn run serverless config credentials --provider aws --key ${AWS_ACCESS_KEY_ID} --secret ${AWS_SECRET_ACCESS_KEY}
         yarn run serverless deploy --stage production --package ./build
