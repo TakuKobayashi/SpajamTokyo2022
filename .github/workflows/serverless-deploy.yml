@@ -1,0 +1,37 @@
+on:
+  push:
+    branches:
+      - master
+
+name: Serverless Deploy
+jobs:
+  deploy:
+    name: deploy
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [16.x]
+    steps:
+    - uses: actions/checkout@v3
+    - name: setup ubuntu
+      run: sudo apt-get --quiet update --yes
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+    - name: Register firebaseConfig.json
+      working-directory: ./serverless
+      run: |
+        echo "${{ secrets.FIREBASE_CONFIG }}" >> ./firebaseConfig.json
+    - name: Register .env
+      working-directory: ./serverless
+      run: touch .env
+    - name: yarn install
+      working-directory: ./serverless
+      run: yarn install
+    - name: serverless package and deploy
+      working-directory: ./serverless
+      run: |
+        yarn run serverless package --stage production --package ./build
+        yarn run serverless config credentials --provider aws --key ${{ secrets.AWS_ACCESS_KEY_ID }} --secret ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        yarn run serverless deploy --stage production --package ./build
