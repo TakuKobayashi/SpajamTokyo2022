@@ -1,7 +1,7 @@
 import awsLambdaFastify from '@fastify/aws-lambda';
 import fastify from 'fastify';
 //import crypto from "crypto";
-import { S3Client, PutObjectCommand, PutObjectCommandInput, ObjectCannedACL } from '@aws-sdk/client-s3';
+import { S3Client, PutObjectCommand, PutObjectCommandInput, ObjectCannedACL, PutObjectCommandOutput } from '@aws-sdk/client-s3';
 import cors from '@fastify/cors'
 import { setupFireStore } from './common/firestore';
 const firestore = setupFireStore();
@@ -37,6 +37,7 @@ app.post('/vote', async (request, reply) => {
     currentData.right = rightCount + 1;
   }
   await currentDoc.set(currentData);
+  await putVoteData(currentData);
   return currentData;
 });
 
@@ -44,33 +45,25 @@ app.post('/vote/reset', async (request, reply) => {
   const currentDoc = firestore.collection('votes').doc(voteName);
   const initData = {left: 0, right: 0}
   await currentDoc.set(initData);
+  await putVoteData(initData);
   return initData;
 });
 
-app.get('/poling/vote', async (request, reply) => {
-  const loadData = await loadCurrentData();
+async function putVoteData(data: any): Promise<PutObjectCommandOutput> {
   const s3Client = new S3Client({ region: process.env.AWS_REGION });
   const input: PutObjectCommandInput = {
     Bucket: process.env.S3_BUCKERT_NAME,
     Key: s3JsonFileKey,
-    Body: JSON.stringify(loadData),
+    Body: JSON.stringify(data),
     ACL: ObjectCannedACL.public_read,
     ContentType: "application/json"
   };
   const command = new PutObjectCommand(input);
-  const output = await s3Client.send(command);
+  return s3Client.send(command);
+}
+
+app.get('/poling/vote', async (request, reply) => {
   reply.redirect(`https://${process.env.S3_BUCKERT_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${s3JsonFileKey}`)
 });
-
-async function loadCurrentData(): Promise<any> {
-  const currentDoc = firestore.collection('votes').doc(voteName);
-  const currentDataDoc = await currentDoc.get();
-  const currentData = currentDataDoc.data() || {};
-  const leftCount = currentData.left || 0;
-  currentData.left = leftCount;
-  const rightCount = currentData.right || 0;
-  currentData.right = rightCount;
-  return currentData;
-}
 
 export const handler = awsLambdaFastify(app);
