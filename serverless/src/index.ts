@@ -21,6 +21,8 @@ app.get('/', async (request, reply) => {
   return {hello: "world"};
 });
 
+const s3JsonFileKey = "vote.json"
+
 app.post('/vote', async (request, reply) => {
   // parsed JSON
   const requestBody = request.body;
@@ -50,13 +52,14 @@ app.get('/poling/vote', async (request, reply) => {
   const s3Client = new S3Client({ region: process.env.AWS_REGION });
   const input: PutObjectCommandInput = {
     Bucket: process.env.S3_BUCKERT_NAME,
-    Key: "vote.json",
+    Key: s3JsonFileKey,
     Body: JSON.stringify(loadData),
     ACL: ObjectCannedACL.public_read,
+    ContentType: "application/json"
   };
   const command = new PutObjectCommand(input);
   const output = await s3Client.send(command);
-  return loadData;
+  reply.redirect(`https://${process.env.S3_BUCKERT_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${s3JsonFileKey}`)
 });
 
 async function loadCurrentData(): Promise<any> {
