@@ -1,6 +1,7 @@
 import awsLambdaFastify from '@fastify/aws-lambda';
 import fastify from 'fastify';
 //import crypto from "crypto";
+import { S3Client, PutObjectCommand, PutObjectCommandInput, ObjectCannedACL } from '@aws-sdk/client-s3';
 import cors from '@fastify/cors'
 import { setupFireStore } from './common/firestore';
 const firestore = setupFireStore();
@@ -45,7 +46,17 @@ app.post('/vote/reset', async (request, reply) => {
 });
 
 app.get('/poling/vote', async (request, reply) => {
-  return loadCurrentData();
+  const loadData = await loadCurrentData();
+  const s3Client = new S3Client({ region: process.env.AWS_REGION });
+  const input: PutObjectCommandInput = {
+    Bucket: process.env.S3_BUCKERT_NAME,
+    Key: "vote.json",
+    Body: JSON.stringify(loadData),
+    ACL: ObjectCannedACL.public_read,
+  };
+  const command = new PutObjectCommand(input);
+  const output = await s3Client.send(command);
+  return loadData;
 });
 
 async function loadCurrentData(): Promise<any> {
