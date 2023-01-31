@@ -2,7 +2,7 @@ import awsLambdaFastify from '@fastify/aws-lambda';
 import fastify from 'fastify';
 //import crypto from "crypto";
 import { S3Client, PutObjectCommand, PutObjectCommandInput, ObjectCannedACL, PutObjectCommandOutput } from '@aws-sdk/client-s3';
-import cors from '@fastify/cors'
+import cors from '@fastify/cors';
 import { setupFireStore } from './common/firestore';
 const firestore = setupFireStore();
 
@@ -13,15 +13,15 @@ const voteName = 'typhoon';
 const app = fastify();
 app.register(cors, {
   origin: (origin, cb) => {
-    cb(null, true)
-  }
+    cb(null, true);
+  },
 });
 
 app.get('/', async (request, reply) => {
-  return {hello: "world"};
+  return { hello: 'world' };
 });
 
-const s3JsonFileKey = "vote.json"
+const s3JsonFileKey = 'vote.json';
 
 app.post('/vote', async (request, reply) => {
   // parsed JSON
@@ -43,7 +43,7 @@ app.post('/vote', async (request, reply) => {
 
 app.post('/vote/reset', async (request, reply) => {
   const currentDoc = firestore.collection('votes').doc(voteName);
-  const initData = {left: 0, right: 0}
+  const initData = { left: 0, right: 0 };
   await currentDoc.set(initData);
   await putVoteData(initData);
   return initData;
@@ -56,14 +56,14 @@ async function putVoteData(data: any): Promise<PutObjectCommandOutput> {
     Key: s3JsonFileKey,
     Body: JSON.stringify(data),
     ACL: ObjectCannedACL.public_read,
-    ContentType: "application/json"
+    ContentType: 'application/json',
   };
   const command = new PutObjectCommand(input);
   return s3Client.send(command);
 }
 
 app.get('/poling/vote', async (request, reply) => {
-  reply.redirect(`https://${process.env.S3_BUCKERT_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${s3JsonFileKey}`)
+  reply.redirect(`https://${process.env.S3_BUCKERT_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${s3JsonFileKey}`);
 });
 
 export const handler = awsLambdaFastify(app);
